@@ -13,10 +13,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        RequestIP();
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.overviewFragment, OverviewFragment.class, null);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void RequestIP() {
+        HueApiManager apiManager = new HueApiManager(this);
+        apiManager.getIpAddress();
     }
 }
