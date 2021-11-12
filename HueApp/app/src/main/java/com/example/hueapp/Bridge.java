@@ -10,21 +10,33 @@ public class Bridge {
     private List<Lamp> lamps;
 
     public Bridge() {
-        Random random = new Random();
+
         this.lamps = new ArrayList<>();
-        for (int i = 0; i <10; i++) {
-            lamps.add(new TestLamp(random.nextInt() + ""));
-        }
+
+
+        //todo remove this test code
+        Random random = new Random();
+
+
+        lamps.add(new TestLamp(random.nextLong()+"","henk del amp"));
+        lamps.add(new TestLamp(random.nextLong()+"","klaas de lamp"));
+        lamps.add(new TestLamp(random.nextLong()+"","piet de lamp"));
+        lamps.add(new TestLamp(random.nextLong()+"","gerda de ledstrip"));
+        lamps.add(new TestLamp(random.nextLong()+"","Jan de discobol"));
+
+
     }
 
     class TestLamp implements Lamp
     {
         private final String LOGTAG = TestLamp.class.getName();
 
-        private String id;
+        private String name;
+        private String uiniqueId;
 
-        public TestLamp(String id) {
-            this.id = id;
+        public TestLamp(String name, String uiniqueid) {
+            this.name = name;
+            this.uiniqueId = uiniqueid;
         }
 
         @Override
@@ -34,8 +46,14 @@ public class Bridge {
 
         @Override
         public String getID() {
-            return id;
+            return this.uiniqueId;
         }
+
+        @Override
+        public String getName() {
+            return this.name;
+        }
+
 
         @Override
         public void on() {

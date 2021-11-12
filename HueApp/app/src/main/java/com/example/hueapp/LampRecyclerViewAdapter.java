@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.example.hueapp.databinding.FragmentOverviewBinding;
 
 import java.util.List;
 
@@ -31,12 +30,13 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
 
     public LampRecyclerViewAdapter(List<Lamp> items, OnItemClickListener listener) {
         mValues = items;
+        this.clickListener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_overview, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.lamp_list_item, parent, false);
         return new ViewHolder(itemView);
 
 
@@ -64,7 +64,6 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
         public ViewHolder(View itemView) {
             super(itemView);
             mIdView = itemView.findViewById(R.id.item_number);
-            //mContentView = itemView.findViewById(R.id.captionTextView);
             itemView.setOnClickListener(this);
         }
 

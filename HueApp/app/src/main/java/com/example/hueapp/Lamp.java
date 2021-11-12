@@ -8,6 +8,8 @@ public interface Lamp{
 
     String getID();
 
+    String getName();
+
     void on();
 
     void off();
