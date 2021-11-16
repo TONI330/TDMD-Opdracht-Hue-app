@@ -2,6 +2,8 @@ package com.example.hueapp;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,16 +20,17 @@ public class Bridge {
         Random random = new Random();
 
 
-        lamps.add(new TestLamp(random.nextLong()+"","henk del amp"));
-        lamps.add(new TestLamp(random.nextLong()+"","klaas de lamp"));
-        lamps.add(new TestLamp(random.nextLong()+"","piet de lamp"));
-        lamps.add(new TestLamp(random.nextLong()+"","gerda de ledstrip"));
-        lamps.add(new TestLamp(random.nextLong()+"","Jan de discobol"));
+        lamps.add(new TestLamp("henk de lamp",random.nextLong()+""));
+        lamps.add(new TestLamp("piet de discobol",random.nextLong()+""));
+        lamps.add(new TestLamp("jan de ledstrip",random.nextLong()+""));
+        lamps.add(new TestLamp("klaasje de kernreactor",random.nextLong()+""));
+        lamps.add(new TestLamp("harry hallogeen",random.nextLong()+""));
+        lamps.add(new TestLamp("olaf oled",random.nextLong()+""));
 
 
     }
 
-    class TestLamp implements Lamp
+    static class TestLamp implements Lamp
     {
         private final String LOGTAG = TestLamp.class.getName();
 
@@ -57,17 +60,27 @@ public class Bridge {
 
         @Override
         public void on() {
-            Log.i(LOGTAG, "on: ");
+            Log.i(LOGTAG, "Turned: "+ name +" on");
         }
 
         @Override
         public void off() {
-            Log.i(LOGTAG, "off: ");
+            Log.i(LOGTAG, "Turned: "+ name +" off");
         }
 
         @Override
         public void toggle() {
-            Log.i(LOGTAG, "toggle: ");
+            Log.i(LOGTAG, "Toggled: "+ name);
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "TestLamp{" +
+                    "LOGTAG='" + LOGTAG + '\'' +
+                    ", name='" + name + '\'' +
+                    ", uiniqueId='" + uiniqueId + '\'' +
+                    '}';
         }
     }
 

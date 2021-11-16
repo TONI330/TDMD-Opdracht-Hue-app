@@ -2,9 +2,7 @@ package com.example.hueapp;
 
 public interface Lamp{
 
-
     boolean getState();
-
 
     String getID();
 
@@ -15,4 +13,5 @@ public interface Lamp{
     void off();
 
     void toggle();
+
 }

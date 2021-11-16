@@ -38,15 +38,13 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.lamp_list_item, parent, false);
         return new ViewHolder(itemView);
-
-
         //return new ViewHolder(FragmentOverviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mLampItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getID());
+        holder.mIdView.setText(mValues.get(position).getName());
         //holder.mContentView.setText(mValues.get(position).content);
     }
 

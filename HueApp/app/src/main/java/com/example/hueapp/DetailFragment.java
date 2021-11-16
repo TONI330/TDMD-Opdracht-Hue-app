@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class DetailFragment extends Fragment {
 
@@ -21,15 +22,26 @@ public class DetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.detail_fragment, container, false);
     }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.mViewModel = new ViewModelProvider(requireActivity()).get(LampsViewModel.class);
+        mViewModel.getSelected().observe(getViewLifecycleOwner(), item -> {
+            // Update the UI.
+            TextView viewById = view.findViewById(R.id.basicBitch);
+            viewById.setText(item.getName());
+        });
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(LampsViewModel.class);
+        //mViewModel = new ViewModelProvider(this).get(LampsViewModel.class);
         // TODO: Use the ViewModel
     }
 

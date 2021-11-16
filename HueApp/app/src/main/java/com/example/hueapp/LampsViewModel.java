@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class LampsViewModel extends ViewModel implements LampRecyclerViewAdapter.OnItemClickListener {
     // TODO: Implement the ViewModel
@@ -19,6 +20,9 @@ public class LampsViewModel extends ViewModel implements LampRecyclerViewAdapter
     public LiveData<Lamp> getSelected() {
         return selected;
     }
+    public Lamp getSelectedLamp() {
+        return selected.getValue();
+    }
 
     public List<Lamp> getItems()
     {
@@ -27,7 +31,7 @@ public class LampsViewModel extends ViewModel implements LampRecyclerViewAdapter
 
     @Override
     public void onItemClick(int clickedPosition) {
-        Log.i(LOGTAG, "onItemClick: " + clickedPosition);
         selected.setValue(getItems().get(clickedPosition));
+        Log.i(LOGTAG, "onItemClick: " + Objects.requireNonNull(selected.getValue()).toString());
     }
 }

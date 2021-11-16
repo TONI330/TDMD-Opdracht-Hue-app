@@ -36,8 +36,7 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(LampsViewModel.class);
-
+        mViewModel = new ViewModelProvider(requireActivity()).get(LampsViewModel.class);
     }
 
 
