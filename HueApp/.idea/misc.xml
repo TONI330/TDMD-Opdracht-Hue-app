@@ -3,13 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/drawable/rounded_square.xml" value="0.21875" />
         <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout-land/activity_main.xml" value="0.1715167548500882" />
         <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout-land/detail_fragment.xml" value="0.1715167548500882" />
         <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout/detail_fragment.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout/fragment_overview.xml" value="0.33" />
         <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout/fragment_overview_list.xml" value="0.20260416666666667" />
-        <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout/lamp_list_item.xml" value="0.2957427536231884" />
+        <entry key="..\:/Users/Ewout/AndroidStudioProjects/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout/lamp_list_item.xml" value="0.33" />
         <entry key="..\:/Users/tjtle/GITprojects/TIgit/TDMD-Opdracht-Hue-app/HueApp/app/src/main/res/layout/fragment_overview_list.xml" value="0.33" />
       </map>
     </option>

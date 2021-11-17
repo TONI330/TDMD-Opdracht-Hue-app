@@ -36,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            transaction.add(R.id.portraitFragment, OverviewFragment.class, null);
+            transaction.replace(R.id.portraitFragment, OverviewFragment.class, null);
         } else {
-            transaction.add(R.id.overviewFragment, OverviewFragment.class, null);
-            transaction.add(R.id.detailFragment, DetailFragment.class, null);
+            transaction.replace(R.id.overviewFragment, OverviewFragment.class, null);
+            transaction.replace(R.id.detailFragment, DetailFragment.class, null);
         }
 
         transaction.addToBackStack(null);
