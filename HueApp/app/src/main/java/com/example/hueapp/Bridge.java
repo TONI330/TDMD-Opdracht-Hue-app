@@ -17,7 +17,7 @@ public class Bridge {
         }
     }
 
-    class TestLamp implements Lamp
+    static class TestLamp implements Lamp
     {
         private final String LOGTAG = TestLamp.class.getName();
 

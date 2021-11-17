@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void RequestIP() {
         HueApiManager apiManager = new HueApiManager(this);
-        apiManager.getIpAddress();
+        apiManager.getLights();
+        Lamp lamp = new Bridge.TestLamp("2");
+        apiManager.setLight(lamp, false);
     }
 }
