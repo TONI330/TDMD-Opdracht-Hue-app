@@ -1,41 +1,53 @@
 package com.example.hueapp;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.hueapp.placeholder.PlaceholderContent.PlaceholderItem;
+
 import com.example.hueapp.databinding.FragmentOverviewBinding;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
+ * {@link RecyclerView.Adapter} that can display a {@link Lamp}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerViewAdapter.ViewHolder> {
+    private static final String LOGTAG = ViewHolder.class.getName();
+    private final List<Lamp> mValues;
+    private OnItemClickListener clickListener;
 
-    private final List<PlaceholderItem> mValues;
+    // This interface isolates us from classes that want to listen to item clicks
+    // so we don't need to know what those classes are
+    public interface OnItemClickListener {
+        void onItemClick(int clickedPosition);
+    }
 
-    public LampRecyclerViewAdapter(List<PlaceholderItem> items) {
+    public LampRecyclerViewAdapter(List<Lamp> items, OnItemClickListener listener) {
         mValues = items;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_overview, parent, false);
+        return new ViewHolder(itemView);
 
-        return new ViewHolder(FragmentOverviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
 
+        //return new ViewHolder(FragmentOverviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mLampItem = mValues.get(position);
+        holder.mIdView.setText(mValues.get(position).getID());
+        //holder.mContentView.setText(mValues.get(position).content);
     }
 
     @Override
@@ -43,20 +55,34 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public PlaceholderItem mItem;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public ViewHolder(FragmentOverviewBinding binding) {
-            super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            mContentView = binding.content;
+        public final TextView mIdView;
+        //public final TextView mContentView;
+        public Lamp mLampItem;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mIdView = itemView.findViewById(R.id.item_number);
+            //mContentView = itemView.findViewById(R.id.captionTextView);
+            itemView.setOnClickListener(this);
+        }
+
+
+        @NonNull
+        @Override
+        public String toString() {
+            return super.toString() + " '" + mIdView.getText() + "'";
         }
 
         @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+        public void onClick(View v) {
+            // Find out which item in the list was clicked by retrieving the position in the adapter
+
+            int clickedPosition = getBindingAdapterPosition();
+            Log.i(LOGTAG, "Item " + clickedPosition + " was clicked");
+            // Notify our listener that an item was clicked
+            clickListener.onItemClick(clickedPosition);
         }
     }
 }
