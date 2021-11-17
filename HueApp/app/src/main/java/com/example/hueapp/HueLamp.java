@@ -6,15 +6,22 @@ public class HueLamp implements Lamp{
     private String id;
     private String name;
 
-    public HueLamp(String name, String id, boolean state) {
+    private LightController lightController;
+
+    public HueLamp(String name, String id, boolean state, LightController lightController) {
         this.state = state;
         this.id = id;
         this.name = name;
+        this.lightController = lightController;
     }
 
     @Override
     public boolean getState() {
         return this.state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 
     @Override

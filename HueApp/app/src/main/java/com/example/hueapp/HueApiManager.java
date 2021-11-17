@@ -3,6 +3,10 @@ package com.example.hueapp;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,24 +23,31 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+interface LightController {
+    void setLight(Lamp lamp, boolean state);
+}
+
 public class HueApiManager {
     private static final String LOGTAG = HueApiManager.class.getName();
     private static final int port = 80;
     private static final String IP_ADDRESS = "192.168.178.81";
-    private static final String USERNAME = "29a75a76037f028174b65b877409680";
+    private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
 
-    private Context appContext;
+    private AppCompatActivity appContext;
     private RequestQueue queue;
 
-    public HueApiManager(Context appContext) {
+    private LampsViewModel mViewModel;
+
+    public HueApiManager(AppCompatActivity appContext) {
         this.appContext = appContext;
         // Create the RequestQueue for Volley requests
         this.queue = Volley.newRequestQueue(this.appContext);
+        mViewModel = new ViewModelProvider(appContext).get(LampsViewModel.class);
     }
 
     public HueApiManager() {
-
     }
+
 
     public void getIpAddress() {
         this.queue.add(getIpAddressRequest());
@@ -101,8 +112,7 @@ public class HueApiManager {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject lights = response.getJSONObject("lights");
-                            printLights(lights);
-                            printHueLamps(lights);
+                            getLampsForViewModel(lights);
                         } catch (JSONException e) {
                             Log.d(LOGTAG, e.getLocalizedMessage());
                         }
@@ -113,14 +123,6 @@ public class HueApiManager {
                         Log.e(LOGTAG, error.getLocalizedMessage());
                     }
                 });
-    }
-
-    private void printHueLamps(JSONObject lights) {
-        List<Lamp> lamps = getLamps(lights);
-
-        for(Lamp lamp : lamps) {
-            Log.i("light", lamp.toString());
-        }
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
@@ -174,20 +176,22 @@ public class HueApiManager {
         }
     }
 
-    private List<Lamp> getLamps(JSONObject lights) {
-        List<Lamp> lampList = new ArrayList<>();
+    private void getLampsForViewModel(JSONObject lights) {
+        List<Lamp> lampList = mViewModel.getItems();
         for (int i = 1; i < lights.length() + 1; i++) {
             try {
              JSONObject light = lights.getJSONObject(i + "");
              String name = light.getString("name");
              JSONObject state = light.getJSONObject("state");
              boolean on = state.getBoolean("on");
-             lampList.add(new HueLamp(name, i + "", on));
+             lampList.add(new HueLamp(name, i + "", on, this::setLight));
              Log.d("light", name);
             } catch(JSONException e) {
                 Log.e(LOGTAG, e.getLocalizedMessage());
             }
         }
-        return lampList;
+        for(Lamp lamp : lampList) {
+            Log.i(LOGTAG, lamp.toString());
+        }
     }
 }

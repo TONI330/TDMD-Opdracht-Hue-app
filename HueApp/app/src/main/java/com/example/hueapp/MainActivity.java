@@ -32,7 +32,5 @@ public class MainActivity extends AppCompatActivity {
 
     private void startApi() {
         this.apiManager.getLights();
-        Lamp lamp = new Bridge.TestLamp("2", "00:17:88:01:00:d4:12:08-0b");
-        this.apiManager.setLight(lamp, false);
     }
 }
