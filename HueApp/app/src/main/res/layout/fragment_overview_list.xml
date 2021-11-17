@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".OverviewFragment"
-    tools:listitem="@layout/fragment_overview" />
+    tools:listitem="@layout/lamp_list_item" />

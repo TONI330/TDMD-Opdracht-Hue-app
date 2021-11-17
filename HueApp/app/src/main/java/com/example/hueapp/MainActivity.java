@@ -8,24 +8,26 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RequestIP();
-
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.overviewFragment, OverviewFragment.class, null);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        startApi();
+        //
+        //FragmentManager manager = getSupportFragmentManager();
+        //FragmentTransaction transaction = manager.beginTransaction();
+        //transaction.add(R.id.overviewFragment, OverviewFragment.class, null);
+        //transaction.addToBackStack(null);
+        //transaction.commit();
     }
 
-    private void RequestIP() {
+    private void startApi() {
         HueApiManager apiManager = new HueApiManager(this);
         apiManager.getLights();
-        Lamp lamp = new Bridge.TestLamp("2");
-        apiManager.setLight(lamp, false);
+        Lamp lamp = new Bridge.TestLamp("2", "00:17:88:01:00:d4:12:08-0b");
+        apiManager.setLight(lamp, true);
     }
 }

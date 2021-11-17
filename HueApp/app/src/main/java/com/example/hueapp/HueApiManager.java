@@ -112,7 +112,7 @@ public class HueApiManager {
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
-        final String url = "http://" + IP_ADDRESS + "/api/" + USERNAME + "/lights/" + lamp.getID() + "/state";
+        final String url = "http://" + IP_ADDRESS + "/api/" + USERNAME + "/lights/" + lamp.getName() + "/state";
         Log.d(LOGTAG, "SetlightsUrl: " + url);
         return new JsonObjectRequest(Request.Method.PUT,
                 url,
