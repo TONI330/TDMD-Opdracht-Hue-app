@@ -6,16 +6,22 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-
+    private HueApiManager apiManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.apiManager = new HueApiManager(this);
+
         startApi();
+
+
         //
         //FragmentManager manager = getSupportFragmentManager();
         //FragmentTransaction transaction = manager.beginTransaction();
@@ -25,9 +31,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startApi() {
-        HueApiManager apiManager = new HueApiManager(this);
-        apiManager.getLights();
+        this.apiManager.getLights();
         Lamp lamp = new Bridge.TestLamp("2", "00:17:88:01:00:d4:12:08-0b");
-        apiManager.setLight(lamp, true);
+        this.apiManager.setLight(lamp, false);
     }
 }

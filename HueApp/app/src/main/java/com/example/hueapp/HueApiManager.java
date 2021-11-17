@@ -16,6 +16,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HueApiManager {
     private static final String LOGTAG = HueApiManager.class.getName();
     private static final int port = 80;
@@ -99,6 +102,7 @@ public class HueApiManager {
                         try {
                             JSONObject lights = response.getJSONObject("lights");
                             printLights(lights);
+                            printHueLamps(lights);
                         } catch (JSONException e) {
                             Log.d(LOGTAG, e.getLocalizedMessage());
                         }
@@ -109,6 +113,14 @@ public class HueApiManager {
                         Log.e(LOGTAG, error.getLocalizedMessage());
                     }
                 });
+    }
+
+    private void printHueLamps(JSONObject lights) {
+        List<Lamp> lamps = getLamps(lights);
+
+        for(Lamp lamp : lamps) {
+            Log.i("light", lamp.toString());
+        }
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
@@ -151,14 +163,31 @@ public class HueApiManager {
     }
 
     private void printLights(JSONObject lights) {
-        for (int i = 1; i < lights.length() + 1; i++) {
+        for (int i = 1; i < lights.length() - 1; i++) {
             try {
-             JSONObject light = lights.getJSONObject(i + "");
-             Object name = light.get("name");
-             Log.d("light", name.toString());
+                JSONObject light = lights.getJSONObject(i + "");
+                String name = light.getString("name");
+                Log.d("light", name);
             } catch(JSONException e) {
                 Log.e(LOGTAG, e.getLocalizedMessage());
             }
         }
+    }
+
+    private List<Lamp> getLamps(JSONObject lights) {
+        List<Lamp> lampList = new ArrayList<>();
+        for (int i = 1; i < lights.length() + 1; i++) {
+            try {
+             JSONObject light = lights.getJSONObject(i + "");
+             String name = light.getString("name");
+             JSONObject state = light.getJSONObject("state");
+             boolean on = state.getBoolean("on");
+             lampList.add(new HueLamp(name, i + "", on));
+             Log.d("light", name);
+            } catch(JSONException e) {
+                Log.e(LOGTAG, e.getLocalizedMessage());
+            }
+        }
+        return lampList;
     }
 }
