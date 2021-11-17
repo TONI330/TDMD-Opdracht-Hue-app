@@ -65,26 +65,18 @@ public class HueApiManager {
         final String url = "http://" + IP_ADDRESS + "/api";
         final Request request = new JsonRequest(Request.Method.POST,
                 url,
-                getBodyIpAddress(), new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(LOGTAG, "Volley response: " + response.toString());
-                        try {
-                            //TODO parse received JSON
+                getBodyIpAddress(), (Response.Listener<JSONArray>) response -> {
+                    Log.d(LOGTAG, "Volley response: " + response.toString());
+                    try {
+                        //TODO parse received JSON
 
-                            //JSONObject object = response.getJSONObject(0);
-                            Log.d("Volley", response.toString());
-                            throw new JSONException("gg");
-                        } catch (JSONException exception) {
-                            Log.e(LOGTAG, "Error while parsing JSON: " + exception.getLocalizedMessage());
-                        }
+                        //JSONObject object = response.getJSONObject(0);
+                        Log.d("Volley", response.toString());
+                        throw new JSONException("gg");
+                    } catch (JSONException exception) {
+                        Log.e(LOGTAG, "Error while parsing JSON: " + exception.getLocalizedMessage());
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e(LOGTAG, error.getLocalizedMessage());
-                    }
-                }
+                }, error -> Log.e(LOGTAG, error.getLocalizedMessage())
         ) {
             @Override
             protected Response parseNetworkResponse(NetworkResponse response) {
@@ -107,22 +99,14 @@ public class HueApiManager {
     public JsonObjectRequest getLightsRequest() {
         final String url = "http://" + IP_ADDRESS + "/api/" + USERNAME;
         return new JsonObjectRequest(
-                url, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONObject lights = response.getJSONObject("lights");
-                            getLampsForViewModel(lights);
-                        } catch (JSONException e) {
-                            Log.d(LOGTAG, e.getLocalizedMessage());
-                        }
+                url, response -> {
+                    try {
+                        JSONObject lights = response.getJSONObject("lights");
+                        getLampsForViewModel(lights);
+                    } catch (JSONException e) {
+                        Log.d(LOGTAG, e.getLocalizedMessage());
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e(LOGTAG, error.getLocalizedMessage());
-                    }
-                });
+                }, error -> Log.e(LOGTAG, error.getLocalizedMessage() != null ? error.getLocalizedMessage() : ""));
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
@@ -130,17 +114,7 @@ public class HueApiManager {
         Log.d(LOGTAG, "SetlightsUrl: " + url);
         return new JsonObjectRequest(Request.Method.PUT,
                 url,
-                getBodySetLights(state), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(LOGTAG, "Response: " + response.toString());
-                    }
-                },new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(LOGTAG, error.getLocalizedMessage());
-            }
-        });
+                getBodySetLights(state), response -> Log.i(LOGTAG, "Response: " + response.toString()), error -> Log.e(LOGTAG, error.getLocalizedMessage()));
     }
 
     private JSONObject getBodySetLights(boolean state) {
