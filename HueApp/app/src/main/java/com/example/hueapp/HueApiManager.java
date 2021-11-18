@@ -63,37 +63,30 @@ public class HueApiManager {
 
     public Request getIpAddressRequest() {
         final String url = "http://" + IP_ADDRESS + "/api";
-        final Request request = new JsonRequest(Request.Method.POST,
+        final JsonRequest jsonRequest = new CustomJsonArrayRequest(Request.Method.POST,
                 url,
-                getBodyIpAddress(), (Response.Listener<JSONArray>) response -> {
-                    Log.d(LOGTAG, "Volley response: " + response.toString());
-                    try {
-                        //TODO parse received JSON
+                getBodyIpAddress(),
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(LOGTAG, "Volley response: " + response.toString());
+                        try {
+                            //TODO parse received JSON
 
-                        //JSONObject object = response.getJSONObject(0);
-                        Log.d("Volley", response.toString());
-                        throw new JSONException("gg");
-                    } catch (JSONException exception) {
-                        Log.e(LOGTAG, "Error while parsing JSON: " + exception.getLocalizedMessage());
+                            //JSONObject object = response.getJSONObject(0);
+                            Log.d("Volley", response.toString());
+                            throw new JSONException("gg");
+                        } catch (JSONException exception) {
+                            Log.e(LOGTAG, "Error while parsing JSON: " + exception.getLocalizedMessage());
+                        }
                     }
-                }, error -> Log.e(LOGTAG, error.getLocalizedMessage())
-        ) {
+                }, new Response.ErrorListener() {
             @Override
-            protected Response parseNetworkResponse(NetworkResponse response) {
-                return null;
+            public void onErrorResponse(VolleyError error) {
+                Log.e(LOGTAG, error.getLocalizedMessage());
             }
-
-            @Override
-            protected void deliverResponse(Object response) {
-
-            }
-
-            @Override
-            public int compareTo(Object o) {
-                return 0;
-            }
-        };
-        return request;
+        });
+        return jsonRequest;
     }
 
     public JsonObjectRequest getLightsRequest() {
@@ -127,7 +120,8 @@ public class HueApiManager {
         return body;
     }
 
-    private String getBodyIpAddress() {
+    private JSONObject getBodyIpAddress() {
+        JSONArray array = new JSONArray();
         JSONObject object = new JSONObject();
         try {
             object.put("devicetype", "MijnDevice#Toin");
@@ -135,7 +129,8 @@ public class HueApiManager {
         } catch (JSONException e) {
             Log.e(LOGTAG, e.getLocalizedMessage());
         }
-        return object.toString();
+        array.put(array);
+        return object;
     }
 
     private void printLights(JSONObject lights) {
