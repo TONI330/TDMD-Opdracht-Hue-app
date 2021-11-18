@@ -15,4 +15,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="placeholder">this is a placeholder</string>
+    <string name="link_button_text">Link</string>
 </resources>

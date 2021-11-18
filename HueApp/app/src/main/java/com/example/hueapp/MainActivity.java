@@ -84,4 +84,8 @@ public class MainActivity extends AppCompatActivity {
     private void startApi() {
         this.apiManager.getLights();
     }
+
+    public void linkButtonPressed(View view) {
+        this.apiManager.getIpAddress();
+    }
 }

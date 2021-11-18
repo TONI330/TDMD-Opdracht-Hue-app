@@ -2,6 +2,7 @@ package com.example.hueapp;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModel;
@@ -30,8 +31,10 @@ interface LightController {
 public class HueApiManager {
     private static final String LOGTAG = HueApiManager.class.getName();
     private static final int port = 80;
-    private static final String IP_ADDRESS = "192.168.178.81";
+    private static final String IP_ADDRESS = "145.49.29.206";
     private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
+
+    private String username;
 
     private AppCompatActivity appContext;
     private RequestQueue queue;
@@ -73,9 +76,12 @@ public class HueApiManager {
                         try {
                             //TODO parse received JSON
 
-                            //JSONObject object = response.getJSONObject(0);
+                            JSONObject object = response.getJSONObject(0);
+                            if(object.toString().contains("success")) {
+                                setUsername(object.getJSONObject("success").getString("username"));
+                                Toast.makeText(appContext, "Linked successfully!", Toast.LENGTH_SHORT).show();
+                            }
                             Log.d("Volley", response.toString());
-                            throw new JSONException("gg");
                         } catch (JSONException exception) {
                             Log.e(LOGTAG, "Error while parsing JSON: " + exception.getLocalizedMessage());
                         }
@@ -89,8 +95,15 @@ public class HueApiManager {
         return jsonRequest;
     }
 
+    private void setUsername(String username) {
+        Log.i(LOGTAG, "Got username: " + username);
+        this.username = username;
+
+        getLights();
+    }
+
     public JsonObjectRequest getLightsRequest() {
-        final String url = "http://" + IP_ADDRESS + "/api/" + USERNAME;
+        final String url = "http://" + IP_ADDRESS + "/api/" + username;
         return new JsonObjectRequest(
                 url, response -> {
                     try {
@@ -103,7 +116,7 @@ public class HueApiManager {
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
-        final String url = "http://" + IP_ADDRESS + "/api/" + USERNAME + "/lights/" + lamp.getName() + "/state";
+        final String url = "http://" + IP_ADDRESS + "/api/" + username + "/lights/" + lamp.getName() + "/state";
         Log.d(LOGTAG, "SetlightsUrl: " + url);
         return new JsonObjectRequest(Request.Method.PUT,
                 url,
@@ -146,20 +159,20 @@ public class HueApiManager {
     }
 
     private void getLampsForViewModel(JSONObject lights) {
-        List<Lamp> lampList = mViewModel.getItems();
         for (int i = 1; i < lights.length() + 1; i++) {
             try {
              JSONObject light = lights.getJSONObject(i + "");
              String name = light.getString("name");
              JSONObject state = light.getJSONObject("state");
              boolean on = state.getBoolean("on");
-             lampList.add(new HueLamp(name, i + "", on, this::setLight));
+             mViewModel.getItems().add(new HueLamp(name, i + "", on, this::setLight));
              Log.d("light", name);
             } catch(JSONException e) {
                 Log.e(LOGTAG, e.getLocalizedMessage());
             }
         }
-        for(Lamp lamp : lampList) {
+
+        for(Lamp lamp : mViewModel.getItems()) {
             Log.i(LOGTAG, lamp.toString());
         }
     }
