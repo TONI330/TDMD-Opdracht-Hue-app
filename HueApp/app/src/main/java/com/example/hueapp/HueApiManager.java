@@ -34,7 +34,7 @@ interface LightController {
 public class HueApiManager implements LightController {
     private static final String LOGTAG = HueApiManager.class.getName();
     private static final int port = 8000;
-    private static final String IP_AND_PORT = "192.168.2.37:" + port;
+    private static final String IP_AND_PORT = "192.168.178.81:" + port;
     //private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
 
     private String username;
@@ -99,12 +99,7 @@ public class HueApiManager implements LightController {
                             Log.e(LOGTAG, "Error while parsing JSON: " + exception.getLocalizedMessage());
                         }
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(LOGTAG, error.getLocalizedMessage());
-            }
-        });
+                }, error -> Log.e(LOGTAG, error.getLocalizedMessage() != null ? error.getLocalizedMessage() : ""));
         return jsonRequest;
     }
 

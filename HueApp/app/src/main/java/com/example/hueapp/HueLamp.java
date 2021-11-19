@@ -7,6 +7,7 @@ public class HueLamp implements Lamp{
     private boolean state;
     private String id;
     private String name;
+    private float[] color;
 
     private LightController lightController;
 
@@ -54,7 +55,13 @@ public class HueLamp implements Lamp{
 
     @Override
     public void setColor(float[] hsv) {
+        this.color = hsv;
         lightController.setLightColor(this,hsv);
+    }
+
+    @Override
+    public float[] getColor() {
+        return this.color;
     }
 
     @NonNull

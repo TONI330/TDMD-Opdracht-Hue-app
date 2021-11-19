@@ -77,6 +77,11 @@ public class Bridge {
             Log.i(LOGTAG, "setColor: "+ Arrays.toString(hsv));
         }
 
+        @Override
+        public float[] getColor() {
+            return null;
+        }
+
         @NonNull
         @Override
         public String toString() {
