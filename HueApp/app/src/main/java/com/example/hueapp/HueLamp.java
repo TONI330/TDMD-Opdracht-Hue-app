@@ -1,5 +1,7 @@
 package com.example.hueapp;
 
+import androidx.annotation.NonNull;
+
 public class HueLamp implements Lamp{
 
     private boolean state;
@@ -50,6 +52,12 @@ public class HueLamp implements Lamp{
         setState(!state);
     }
 
+    @Override
+    public void setColor(float[] hsv) {
+        lightController.setLightColor(this,hsv);
+    }
+
+    @NonNull
     @Override
     public String toString() {
         return "HueLamp{" +

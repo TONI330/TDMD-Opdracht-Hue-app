@@ -4,16 +4,23 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.madrapps.pikolo.ColorPicker;
+import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
 import java.util.Objects;
 
@@ -21,6 +28,7 @@ import java.util.Objects;
 public class DetailFragment extends Fragment {
 
     private LampsViewModel mViewModel;
+    private static final String LOGTAG = DetailFragment.class.getName();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,6 +39,31 @@ public class DetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.mViewModel = new ViewModelProvider(requireActivity()).get(LampsViewModel.class);
         update();
+        final boolean[] done = {false};
+        ImageView imageView = view.findViewById(R.id.colorPickerCircle);
+        ColorPicker colorPicker = view.findViewById(R.id.colorPicker);
+        colorPicker.setColorSelectionListener(new SimpleColorSelectionListener() {
+            @Override
+            public void onColorSelected(int color) {
+                // Do whatever you want with the color
+                imageView.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+                float[] hsv = new float[3];
+                Color.colorToHSV(color, hsv);
+
+                hsv[0] = hsv[0] / 365f * 65535f;
+                hsv[1] = hsv[1] * 254f;
+                hsv[2] = hsv[2] * 254f;
+
+
+                mViewModel.getSelectedLamp().setColor(hsv);
+//                if (!done[0]) {
+//                    mViewModel.getSelectedLamp().setColor(hsv);
+//                    done[0] = true;
+//                }
+
+                Log.i(LOGTAG, "onColorSelected: " + color);
+            }
+        });
 
     }
 

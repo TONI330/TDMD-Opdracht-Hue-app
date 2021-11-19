@@ -14,4 +14,5 @@ public interface Lamp{
 
     void toggle();
 
+    void setColor(float[] hsv);
 }
