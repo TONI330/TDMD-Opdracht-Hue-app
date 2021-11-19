@@ -22,6 +22,7 @@ public class HueLamp implements Lamp{
 
     public void setState(boolean state) {
         this.state = state;
+        lightController.setLight(this, state);
     }
 
     @Override
@@ -36,17 +37,17 @@ public class HueLamp implements Lamp{
 
     @Override
     public void on() {
-
+        setState(true);
     }
 
     @Override
     public void off() {
-
+        setState(false);
     }
 
     @Override
     public void toggle() {
-
+        setState(!state);
     }
 
     @Override
