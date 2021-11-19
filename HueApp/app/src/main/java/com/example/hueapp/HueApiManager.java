@@ -2,13 +2,14 @@ package com.example.hueapp;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.NetworkResponse;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -21,9 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 interface LightController {
     void setLight(Lamp lamp, boolean state);
 }
@@ -31,8 +29,8 @@ interface LightController {
 public class HueApiManager {
     private static final String LOGTAG = HueApiManager.class.getName();
     private static final int port = 80;
-    private static final String IP_ADDRESS = "145.49.29.206";
-    private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
+    private static final String IP_ADDRESS = "192.168.178.81";
+    //private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
 
     private String username;
 
@@ -116,7 +114,7 @@ public class HueApiManager {
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
-        final String url = "http://" + IP_ADDRESS + "/api/" + username + "/lights/" + lamp.getName() + "/state";
+        final String url = "http://" + IP_ADDRESS + "/api/" + username + "/lights/" + lamp.getID() + "/state";
         Log.d(LOGTAG, "SetlightsUrl: " + url);
         return new JsonObjectRequest(Request.Method.PUT,
                 url,
@@ -161,17 +159,16 @@ public class HueApiManager {
     private void getLampsForViewModel(JSONObject lights) {
         for (int i = 1; i < lights.length() + 1; i++) {
             try {
-             JSONObject light = lights.getJSONObject(i + "");
-             String name = light.getString("name");
-             JSONObject state = light.getJSONObject("state");
-             boolean on = state.getBoolean("on");
-             mViewModel.addItem(new HueLamp(name, i + "", on, this::setLight));
-             Log.d("light", name);
-            } catch(JSONException e) {
+                JSONObject light = lights.getJSONObject(i + "");
+                String name = light.getString("name");
+                JSONObject state = light.getJSONObject("state");
+                boolean on = state.getBoolean("on");
+                mViewModel.addItem(new HueLamp(name, i + "", on, this::setLight));
+                Log.d("light", name);
+            } catch (JSONException e) {
                 Log.e(LOGTAG, e.getLocalizedMessage());
             }
         }
-
         for(Lamp lamp : mViewModel.getItems()) {
             Log.i(LOGTAG, lamp.toString());
         }

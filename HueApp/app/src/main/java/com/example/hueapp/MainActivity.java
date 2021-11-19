@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         this.apiManager = new HueApiManager(this);
         startApi();
 
-
         mViewModel = new ViewModelProvider(this).get(LampsViewModel.class);
         mViewModel.getSelected().observe(this, this::listItemPressed);
 
@@ -87,5 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void linkButtonPressed(View view) {
         this.apiManager.getIpAddress();
+    }
+
+    public void toggleSelected(View view) {
+        this.mViewModel.getSelectedLamp().toggle();
     }
 }

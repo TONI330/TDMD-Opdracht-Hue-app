@@ -25,14 +25,11 @@ public class LampsViewModel extends ViewModel implements LampRecyclerViewAdapter
         listeners.forEach(listener -> listener.onListUpdate(index));
     }
 
-    public boolean addListUpdateListener(ItemAddedListener listener)
-    {
-        if (!listeners.contains(listener)) {
-            listeners.add(listener);
+    public boolean addListUpdateListener(ItemAddedListener listener) {
+        if (!listeners.contains(listener)) { listeners.add(listener);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
 
@@ -55,9 +52,8 @@ public class LampsViewModel extends ViewModel implements LampRecyclerViewAdapter
             items.add(lamp);
             triggerListeners(items.size());
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override
