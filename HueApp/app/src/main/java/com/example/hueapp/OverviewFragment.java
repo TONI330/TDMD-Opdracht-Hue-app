@@ -50,8 +50,9 @@ public class OverviewFragment extends Fragment {
 
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-            recyclerView.setAdapter(new LampRecyclerViewAdapter(mViewModel.getItems(), mViewModel));
+            LampRecyclerViewAdapter lampRecyclerViewAdapter = new LampRecyclerViewAdapter(mViewModel.getItems(), mViewModel);
+            recyclerView.setAdapter(lampRecyclerViewAdapter);
+            mViewModel.addListUpdateListener(lampRecyclerViewAdapter::notifyItemInserted);
         }
         return view;
     }

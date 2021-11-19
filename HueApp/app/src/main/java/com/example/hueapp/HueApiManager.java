@@ -165,7 +165,7 @@ public class HueApiManager {
              String name = light.getString("name");
              JSONObject state = light.getJSONObject("state");
              boolean on = state.getBoolean("on");
-             mViewModel.getItems().add(new HueLamp(name, i + "", on, this::setLight));
+             mViewModel.addItem(new HueLamp(name, i + "", on, this::setLight));
              Log.d("light", name);
             } catch(JSONException e) {
                 Log.e(LOGTAG, e.getLocalizedMessage());
