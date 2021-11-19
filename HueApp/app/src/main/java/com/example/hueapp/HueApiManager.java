@@ -28,8 +28,8 @@ interface LightController {
 
 public class HueApiManager {
     private static final String LOGTAG = HueApiManager.class.getName();
-    private static final int port = 80;
-    private static final String IP_ADDRESS = "192.168.178.81";
+    private static final int port = 8000;
+    private static final String IP_AND_PORT = "192.168.178.81:" + port;
     //private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
 
     private String username;
@@ -63,7 +63,7 @@ public class HueApiManager {
     }
 
     public Request getIpAddressRequest() {
-        final String url = "http://" + IP_ADDRESS + "/api";
+        final String url = "http://" + IP_AND_PORT + "/api";
         final JsonRequest jsonRequest = new CustomJsonArrayRequest(Request.Method.POST,
                 url,
                 getBodyIpAddress(),
@@ -101,7 +101,7 @@ public class HueApiManager {
     }
 
     public JsonObjectRequest getLightsRequest() {
-        final String url = "http://" + IP_ADDRESS + "/api/" + username;
+        final String url = "http://" + IP_AND_PORT + "/api/" + username;
         return new JsonObjectRequest(
                 url, response -> {
                     try {
@@ -114,7 +114,7 @@ public class HueApiManager {
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
-        final String url = "http://" + IP_ADDRESS + "/api/" + username + "/lights/" + lamp.getID() + "/state";
+        final String url = "http://" + IP_AND_PORT + "/api/" + username + "/lights/" + lamp.getID() + "/state";
         Log.d(LOGTAG, "SetlightsUrl: " + url);
         return new JsonObjectRequest(Request.Method.PUT,
                 url,
