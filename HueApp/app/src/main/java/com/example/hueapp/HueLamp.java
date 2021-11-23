@@ -52,9 +52,14 @@ public class HueLamp implements Lamp{
         setState(!state);
     }
 
+    private float[] hsv;
+
     @Override
     public void setColor(float[] hsv) {
-        lightController.setLightColor(this,hsv);
+        if (this.hsv == null || this.hsv[0] != hsv[0]) {
+            this.hsv = hsv;
+            lightController.setLightColor(this,this.hsv);
+        }
     }
 
     @NonNull

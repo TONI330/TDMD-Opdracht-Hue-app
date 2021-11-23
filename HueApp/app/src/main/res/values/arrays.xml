@@ -9,4 +9,10 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="ips">
+        <item>192.168.2.37:8000</item>
+        <item>192.168.178.21:8000</item>
+    </string-array>
+
 </resources>

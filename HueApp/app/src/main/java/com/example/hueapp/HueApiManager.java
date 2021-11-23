@@ -10,9 +10,11 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
@@ -33,8 +35,7 @@ interface LightController {
 
 public class HueApiManager implements LightController {
     private static final String LOGTAG = HueApiManager.class.getName();
-    private static final int port = 8000;
-    private static final String IP_AND_PORT = "192.168.2.37:" + port;
+
     //private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
 
     private String username;
@@ -47,11 +48,26 @@ public class HueApiManager implements LightController {
     public HueApiManager(AppCompatActivity appContext) {
         this.appContext = appContext;
         // Create the RequestQueue for Volley requests
+
+
+
         this.queue = Volley.newRequestQueue(this.appContext);
         mViewModel = new ViewModelProvider(appContext).get(LampsViewModel.class);
     }
 
     public HueApiManager() {
+    }
+
+
+    private String getIpAndPortCombo()
+    {
+        String IP_AND_PORT = "192.168.2.38:" + 8000;
+
+        String value = KeyValueStorage.getValue(appContext, R.string.chosenIp);
+        if (!value.isEmpty())
+            IP_AND_PORT = value;
+
+        return IP_AND_PORT;
     }
 
 
@@ -73,12 +89,12 @@ public class HueApiManager implements LightController {
         stringObjectHashMap.put("sat",hsv[1]);
         stringObjectHashMap.put("bri",hsv[2]);
 //        this.queue.cancelAll("hue");
-        this.queue.add(genStateRequest(lamp,getBody(stringObjectHashMap) ).setTag("hue"));
+        Request<?> request = genStateRequest(lamp, getBody(stringObjectHashMap)).setTag("hue");
+        this.queue.add(request);
     }
 
-
     public Request getIpAddressRequest() {
-        final String url = "http://" + IP_AND_PORT + "/api";
+        final String url = "http://" + getIpAndPortCombo() + "/api";
         final JsonRequest jsonRequest = new CustomJsonArrayRequest(Request.Method.POST,
                 url,
                 getBodyIpAddress(),
@@ -116,7 +132,7 @@ public class HueApiManager implements LightController {
     }
 
     public JsonObjectRequest getLightsRequest() {
-        final String url = "http://" + IP_AND_PORT + "/api/" + username;
+        final String url = "http://" + getIpAndPortCombo() + "/api/" + username;
         return new JsonObjectRequest(
                 url, response -> {
                     try {
@@ -129,7 +145,7 @@ public class HueApiManager implements LightController {
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
-        final String url = "http://" + IP_AND_PORT + "/api/" + username + "/lights/" + lamp.getID() + "/state";
+        final String url = "http://" + getIpAndPortCombo() + "/api/" + username + "/lights/" + lamp.getID() + "/state";
         Log.d(LOGTAG, "SetlightsUrl: " + url);
         return new JsonObjectRequest(Request.Method.PUT,
                 url,
@@ -138,7 +154,7 @@ public class HueApiManager implements LightController {
 
     public JsonObjectRequest genStateRequest(Lamp lamp, JSONObject requestData)
     {
-        final String url = "http://" + IP_AND_PORT + "/api/" + username + "/lights/" + lamp.getID() + "/state";
+        final String url = "http://" + getIpAndPortCombo() + "/api/" + username + "/lights/" + lamp.getID() + "/state";
         Log.d(LOGTAG, "SetlightsUrl: " + url);
         return new JsonObjectRequest(Request.Method.PUT,
                 url,
