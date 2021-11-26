@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,12 @@ public class SettingsFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                KeyValueStorage.setValue(requireActivity(), R.string.chosenIp, adapter.getItem(position).toString());
+                boolean isChanged = KeyValueStorage.setValue(requireActivity(), R.string.chosenIp, adapter.getItem(position).toString());
+                if (isChanged) {
+                    LampsViewModel lampsViewModel = new ViewModelProvider(requireActivity()).get(LampsViewModel.class);
+                    lampsViewModel.clearBride();
+                    lampsViewModel.setIsConnected(false);
+                }
             }
 
             @Override

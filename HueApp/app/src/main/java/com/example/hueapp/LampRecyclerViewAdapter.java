@@ -26,6 +26,7 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
     private OnItemClickListener clickListener;
     private ImageView lampImage;
 
+
     // This interface isolates us from classes that want to listen to item clicks
     // so we don't need to know what those classes are
     public interface OnItemClickListener {

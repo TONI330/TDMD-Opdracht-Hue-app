@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -43,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
         //transaction.addToBackStack(null);
         transaction.commit();
+
+
+
+        mViewModel.getIsConnected().observe(this, this::setButtonVisibility);
+    }
+
+    private void setButtonVisibility(boolean isConnected){
+        Button button = findViewById(R.id.linkButton);
+        button.setVisibility(isConnected ? View.GONE : View.VISIBLE);
     }
 
 

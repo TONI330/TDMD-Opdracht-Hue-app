@@ -53,6 +53,7 @@ public class OverviewFragment extends Fragment {
             LampRecyclerViewAdapter lampRecyclerViewAdapter = new LampRecyclerViewAdapter(mViewModel.getItems(), mViewModel);
             recyclerView.setAdapter(lampRecyclerViewAdapter);
             mViewModel.addListUpdateListener(lampRecyclerViewAdapter::notifyItemInserted);
+            mViewModel.setClearedListener(lampRecyclerViewAdapter::notifyDataSetChanged);
         }
         return view;
     }
