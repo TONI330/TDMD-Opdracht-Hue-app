@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             transaction.replace(R.id.detailFragment, DetailFragment.class, null);
         }
 
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToDetail(FragmentManager manager) {
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.portraitFragment, DetailFragment.class, null);
+        transaction.replace(R.id.portraitFragment, DetailFragment.class, null,"portraitFragment");
         transaction.addToBackStack("portraitDetail");
         transaction.commit();
     }
@@ -86,6 +86,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void linkButtonPressed(View view) {
         this.apiManager.getIpAddress();
+    }
+
+    public void settingsButtonPressed(View view)
+    {
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+
+        Fragment fragmentA = supportFragmentManager.findFragmentByTag("SettingsFragment");
+        if (fragmentA == null) {
+            FragmentTransaction transaction = supportFragmentManager.beginTransaction();
+            transaction.add(R.id.portraitFragment, SettingsFragment.class, null,"SettingsFragment");
+            transaction.addToBackStack("SettingsFragment");
+            transaction.commit();
+        }else {
+            supportFragmentManager.popBackStack();
+        }
     }
 
     public void toggleSelected(View view) {
