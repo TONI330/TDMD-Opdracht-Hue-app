@@ -1,21 +1,15 @@
 package com.example.hueapp;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
@@ -24,7 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +31,6 @@ public class HueApiManager implements LightController {
 
     //private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
 
-    private String username;
 
     private AppCompatActivity appContext;
     private RequestQueue queue;
@@ -70,9 +62,33 @@ public class HueApiManager implements LightController {
         return IP_AND_PORT;
     }
 
+    private String getUsername()
+    {
+        String IP_AND_PORT = "";
+
+        String value = KeyValueStorage.getValue(appContext, R.string.username);
+        if (!value.isEmpty())
+            IP_AND_PORT = value;
+
+        return IP_AND_PORT;
+    }
+
+
+
+    private String getApiEndPoint()
+    {
+        return "http://" + getIpAndPortCombo() + "/api/" + getUsername();
+    }
+
+
 
     public void getIpAddress() {
-        this.queue.add(getIpAddressRequest());
+        if (getUsername().isEmpty())
+        {
+            this.queue.add(getIpAddressRequest());
+        }
+        getLights();
+
     }
 
     public void getLights() {
@@ -94,7 +110,7 @@ public class HueApiManager implements LightController {
     }
 
     public Request getIpAddressRequest() {
-        final String url = "http://" + getIpAndPortCombo() + "/api";
+        final String url = getApiEndPoint();
         final JsonRequest jsonRequest = new CustomJsonArrayRequest(Request.Method.POST,
                 url,
                 getBodyIpAddress(),
@@ -121,13 +137,11 @@ public class HueApiManager implements LightController {
 
     private void setUsername(String username) {
         Log.i(LOGTAG, "Got username: " + username);
-        this.username = username;
-
-        getLights();
+        KeyValueStorage.setValue(appContext,R.string.username,username);
     }
 
     public JsonObjectRequest getLightsRequest() {
-        final String url = "http://" + getIpAndPortCombo() + "/api/" + username;
+        final String url = getApiEndPoint();
         return new JsonObjectRequest(
                 url, response -> {
                     try {
@@ -140,20 +154,21 @@ public class HueApiManager implements LightController {
     }
 
     public JsonObjectRequest setLightsRequest(Lamp lamp, boolean state) {
-        final String url = "http://" + getIpAndPortCombo() + "/api/" + username + "/lights/" + lamp.getID() + "/state";
+        final String url = getApiEndPoint() + "/lights/" + lamp.getID() + "/state";
         Log.d(LOGTAG, "SetlightsUrl: " + url);
         return new JsonObjectRequest(Request.Method.PUT,
                 url,
                 getBodySetLights(state), response -> Log.i(LOGTAG, "Response: " + response.toString()), error -> Log.e(LOGTAG, error.getLocalizedMessage()));
     }
 
-    public JsonObjectRequest genStateRequest(Lamp lamp, JSONObject requestData)
+    public JsonRequest<JSONArray> genStateRequest(Lamp lamp, JSONObject requestData)
     {
-        final String url = "http://" + getIpAndPortCombo() + "/api/" + username + "/lights/" + lamp.getID() + "/state";
+        final String url = getApiEndPoint() + "/lights/" + lamp.getID() + "/state";
         Log.d(LOGTAG, "SetlightsUrl: " + url);
-        return new JsonObjectRequest(Request.Method.PUT,
+
+        return new CustomJsonArrayRequest(Request.Method.PUT,
                 url,
-                requestData, response -> Log.i(LOGTAG, "Response: " + response.toString()), error -> Log.e(LOGTAG, error.getLocalizedMessage()));
+                requestData, response -> Log.i(LOGTAG, "Response1: " + response.toString()), error -> Log.e(LOGTAG, error.getLocalizedMessage()));
 
     }
     private JSONObject getBodySetLights(boolean state) {

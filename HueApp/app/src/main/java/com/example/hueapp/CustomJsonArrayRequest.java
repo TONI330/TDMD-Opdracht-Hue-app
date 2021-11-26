@@ -14,22 +14,19 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
-public class ApiRequests {
 
+public class CustomJsonArrayRequest extends JsonRequest<JSONArray> {
 
-
-}
-
-class CustomJsonArrayRequest extends JsonRequest<JSONArray> {
     public CustomJsonArrayRequest(int method, String url, @Nullable JSONObject requestBody,
                                   Response.Listener<JSONArray> listener,
                                   @Nullable Response.ErrorListener errorListener) {
-        super( method,
+        super(  method,
                 url,
                 requestBody.toString(),
                 listener,
                 errorListener);
     }
+
     @Override
     protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
         Response parsingResult;
@@ -40,30 +37,6 @@ class CustomJsonArrayRequest extends JsonRequest<JSONArray> {
             parsingResult = Response.success(returnArray, HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException | JSONException e) {
             parsingResult = Response.error(new VolleyError("Returned info is not a JsonArray"));
-        }
-        return parsingResult;
-    }
-}
-class CustomJsonObjectRequest extends JsonRequest<JSONObject> {
-    public CustomJsonObjectRequest(int method, String url, @Nullable JSONArray requestBody,
-                                   Response.Listener<JSONObject> listener,
-                                   @Nullable Response.ErrorListener errorListener) {
-        super( method,
-                url,
-                requestBody.toString(),
-                listener,
-                errorListener);
-    }
-    @Override
-    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-        Response parsingResult;
-        try {
-            String responseInText = new String(response.data,
-                    HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
-            JSONObject returnArray = new JSONObject(responseInText);
-            parsingResult = Response.success(returnArray, HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException | JSONException e) {
-            parsingResult = Response.error(new VolleyError("Returned info is not a JsonObject"));
         }
         return parsingResult;
     }
