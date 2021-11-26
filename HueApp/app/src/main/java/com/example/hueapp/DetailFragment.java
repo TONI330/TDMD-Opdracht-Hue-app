@@ -22,13 +22,18 @@ import android.widget.TextView;
 import com.madrapps.pikolo.ColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 
 public class DetailFragment extends Fragment {
 
     private LampsViewModel mViewModel;
     private static final String LOGTAG = DetailFragment.class.getName();
+    private HashMap<String, float[]> colorMap;
+    private float[] lastColor;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,6 +45,10 @@ public class DetailFragment extends Fragment {
         this.mViewModel = new ViewModelProvider(requireActivity()).get(LampsViewModel.class);
         update();
         final boolean[] done = {false};
+
+        this.colorMap = new HashMap<>();
+        startUpdatingColor();
+
         ImageView imageView = view.findViewById(R.id.colorPickerCircle);
         ColorPicker colorPicker = view.findViewById(R.id.colorPicker);
         colorPicker.setColorSelectionListener(new SimpleColorSelectionListener() {
@@ -50,22 +59,59 @@ public class DetailFragment extends Fragment {
                 float[] hsv = new float[3];
                 Color.colorToHSV(color, hsv);
 
-                hsv[0] = hsv[0] / 365f * 65535f;
-                hsv[1] = hsv[1] * 254f;
-                hsv[2] = hsv[2] * 254f;
+                colorMap.replace("hsv", hsv);
 
-
-                mViewModel.getSelectedLamp().setColor(hsv);
+                //mViewModel.getSelectedLamp().setColor(hsv);
 //                if (!done[0]) {
 //                    mViewModel.getSelectedLamp().setColor(hsv);
 //                    done[0] = true;
 //                }
 
-                Log.i(LOGTAG, "onColorSelected: " + color);
+
             }
         });
 
     }
+
+    public void startUpdatingColor() {
+
+        Executor executor = new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                    }
+                };
+            }
+        };
+
+        new Thread( () -> {
+            while(true) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                float[] hsv = this.colorMap.get("hsv");
+                if(hsv == null) {
+                    Log.i(LOGTAG, "HSV is null");
+                    continue;
+                }
+                Log.i(LOGTAG, "hsv: " + hsv.toString());
+                if(hsv != null && !Arrays.equals(this.lastColor, hsv)) {
+                    this.mViewModel.getSelectedLamp().setColor(hsv);
+                    this.lastColor = hsv;
+                }
+
+                Log.i(LOGTAG, "onColorSelected: " + Arrays.toString(hsv));
+            }
+        }).start();
+    }
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -212,7 +212,10 @@ public class HueApiManager implements LightController {
                 String name = light.getString("name");
                 JSONObject state = light.getJSONObject("state");
                 boolean on = state.getBoolean("on");
-                mViewModel.addItem(new HueLamp(name, i + "", on, this));
+                HueLamp hueLamp = new HueLamp(name, i + "", on, this);
+                //TODO finish
+                //hueLamp.setColor(light.get())
+                mViewModel.addItem(hueLamp);
                 Log.d("light", name);
             } catch (JSONException e) {
                 Log.e(LOGTAG, e.getLocalizedMessage());

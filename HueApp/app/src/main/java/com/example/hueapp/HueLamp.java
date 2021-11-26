@@ -57,6 +57,11 @@ public class HueLamp implements Lamp{
 
     @Override
     public void setColor(float[] hsv) {
+        this.color = hsv;
+        hsv[0] = hsv[0] / 365f * 65535f;
+        hsv[1] = hsv[1] * 254f;
+        hsv[2] = hsv[2] * 254f;
+
         if (this.hsv == null || this.hsv[0] != hsv[0]) {
             this.hsv = hsv;
             lightController.setLightColor(this,this.hsv);
