@@ -3,10 +3,13 @@ package com.example.hueapp;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -21,6 +24,7 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
     private static final String LOGTAG = ViewHolder.class.getName();
     private final List<Lamp> mValues;
     private OnItemClickListener clickListener;
+    private ImageView lampImage;
 
     // This interface isolates us from classes that want to listen to item clicks
     // so we don't need to know what those classes are
@@ -37,6 +41,7 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.lamp_list_item, parent, false);
+        this.lampImage = itemView.findViewById(R.id.lamp_color);
         return new ViewHolder(itemView);
         //return new ViewHolder(FragmentOverviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
@@ -45,6 +50,7 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mLampItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getName());
+        if(holder.mLampItem.getColor() != null) lampImage.setColorFilter(Color.HSVToColor(holder.mLampItem.getColor()), PorterDuff.Mode.ADD);
         //holder.mContentView.setText(mValues.get(position).content);
     }
 

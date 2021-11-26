@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -69,6 +70,16 @@ public class Bridge {
         @Override
         public void toggle() {
             Log.i(LOGTAG, "Toggled: "+ name);
+        }
+
+        @Override
+        public void setColor(float[] hsv) {
+            Log.i(LOGTAG, "setColor: "+ Arrays.toString(hsv));
+        }
+
+        @Override
+        public float[] getColor() {
+            return null;
         }
 
         @NonNull

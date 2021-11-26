@@ -22,11 +22,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
+
 interface LightController {
     void setLight(Lamp lamp, boolean state);
+    void setLightColor(Lamp lamp, float[] hsv);
 }
 
-public class HueApiManager {
+public class HueApiManager implements LightController {
     private static final String LOGTAG = HueApiManager.class.getName();
     private static final int port = 8000;
     private static final String IP_AND_PORT = "192.168.178.81:" + port;
@@ -59,8 +64,18 @@ public class HueApiManager {
     }
 
     public void setLight(Lamp lamp, boolean state) {
-        this.queue.add(setLightsRequest(lamp, state));
+        this.queue.add(genStateRequest(lamp, getBody("on",state)));
     }
+
+    public void setLightColor(Lamp lamp, float[] hsv) {
+        HashMap<String, Object> stringObjectHashMap = new HashMap<>();
+        stringObjectHashMap.put("hue",hsv[0]);
+        stringObjectHashMap.put("sat",hsv[1]);
+        stringObjectHashMap.put("bri",hsv[2]);
+//        this.queue.cancelAll("hue");
+        this.queue.add(genStateRequest(lamp,getBody(stringObjectHashMap) ).setTag("hue"));
+    }
+
 
     public Request getIpAddressRequest() {
         final String url = "http://" + IP_AND_PORT + "/api";
@@ -84,12 +99,7 @@ public class HueApiManager {
                             Log.e(LOGTAG, "Error while parsing JSON: " + exception.getLocalizedMessage());
                         }
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(LOGTAG, error.getLocalizedMessage());
-            }
-        });
+                }, error -> Log.e(LOGTAG, error.getLocalizedMessage() != null ? error.getLocalizedMessage() : ""));
         return jsonRequest;
     }
 
@@ -121,15 +131,38 @@ public class HueApiManager {
                 getBodySetLights(state), response -> Log.i(LOGTAG, "Response: " + response.toString()), error -> Log.e(LOGTAG, error.getLocalizedMessage()));
     }
 
+    public JsonObjectRequest genStateRequest(Lamp lamp, JSONObject requestData)
+    {
+        final String url = "http://" + IP_AND_PORT + "/api/" + username + "/lights/" + lamp.getID() + "/state";
+        Log.d(LOGTAG, "SetlightsUrl: " + url);
+        return new JsonObjectRequest(Request.Method.PUT,
+                url,
+                requestData, response -> Log.i(LOGTAG, "Response: " + response.toString()), error -> Log.e(LOGTAG, error.getLocalizedMessage()));
+
+    }
     private JSONObject getBodySetLights(boolean state) {
+        return getBody("on",state);
+    }
+
+    private JSONObject getBody(String param, Object object) {
+        HashMap<String, Object> stringObjectHashMap = new HashMap<>();
+        stringObjectHashMap.put(param,object);
+        return getBody(stringObjectHashMap);
+    }
+
+    private JSONObject getBody(Map<String,Object> stringObjectDictionary) {
         JSONObject body = new JSONObject();
         try {
-        body.put("on", state);
+            for (Map.Entry<String, Object> entry : stringObjectDictionary.entrySet()) {
+                body.put(entry.getKey(),  entry.getValue());
+            }
         } catch(JSONException e) {
             Log.e(LOGTAG, e.getLocalizedMessage());
         }
         return body;
     }
+
+
 
     private JSONObject getBodyIpAddress() {
         JSONArray array = new JSONArray();
@@ -163,7 +196,7 @@ public class HueApiManager {
                 String name = light.getString("name");
                 JSONObject state = light.getJSONObject("state");
                 boolean on = state.getBoolean("on");
-                mViewModel.addItem(new HueLamp(name, i + "", on, this::setLight));
+                mViewModel.addItem(new HueLamp(name, i + "", on, this));
                 Log.d("light", name);
             } catch (JSONException e) {
                 Log.e(LOGTAG, e.getLocalizedMessage());
