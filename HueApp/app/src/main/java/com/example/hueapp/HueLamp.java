@@ -2,12 +2,13 @@ package com.example.hueapp;
 
 import androidx.annotation.NonNull;
 
+import java.util.Arrays;
+
 public class HueLamp implements Lamp{
 
     private boolean state;
     private String id;
     private String name;
-    private float[] color;
 
     private LightController lightController;
 
@@ -53,19 +54,19 @@ public class HueLamp implements Lamp{
         setState(!state);
     }
 
-    private float[] hsv;
+    private final float[] hsv = new float[3];
 
     @Override
     public void setColor(float[] hsv) {
-        if (this.hsv == null || this.hsv[0] != hsv[0]) {
-            this.hsv = hsv;
+        if (this.hsv[0] != hsv[0]) {
+            System.arraycopy(hsv, 0, this.hsv, 0, hsv.length);
             lightController.setLightColor(this,this.hsv);
         }
     }
 
     @Override
     public float[] getColor() {
-        return this.color;
+        return this.hsv;
     }
 
     @NonNull
