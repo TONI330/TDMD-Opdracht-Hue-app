@@ -14,12 +14,40 @@ interface ItemAddedListener {
     void onListUpdate(int index);
 }
 
+interface ListClearedListener {
+    void onListCleared();
+}
+
+
 public class LampsViewModel extends ViewModel implements LampRecyclerViewAdapter.OnItemClickListener {
     // TODO: Implement the ViewModel
     private final MutableLiveData<Lamp> selected = new MutableLiveData<>();
     private static final String LOGTAG = LampsViewModel.class.getName();
     private Bridge bridge = new Bridge();
     private List<ItemAddedListener> listeners = new LinkedList<>();
+    private ListClearedListener clearedListener = null;
+
+    public boolean setClearedListener(ListClearedListener listener)
+    {
+        if (clearedListener != null)
+            return false;
+
+        clearedListener = listener;
+        return true;
+    }
+
+    private final MutableLiveData<Boolean> isConnected = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getIsConnected()
+    {
+        return isConnected;
+    }
+
+    public void setIsConnected(boolean isConnected)
+    {
+        this.isConnected.postValue(isConnected);
+    }
+
 
     private void triggerListeners(int index) {
         listeners.forEach(listener -> listener.onListUpdate(index));
@@ -30,6 +58,12 @@ public class LampsViewModel extends ViewModel implements LampRecyclerViewAdapter
             return true;
         }
         return false;
+    }
+
+    public void clearBride()
+    {
+        bridge.getLamps().clear();
+        clearedListener.onListCleared();
     }
 
 

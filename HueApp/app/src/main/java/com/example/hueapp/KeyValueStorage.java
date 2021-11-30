@@ -11,15 +11,21 @@ import androidx.annotation.StringRes;
 public class KeyValueStorage {
 
 
-    public static void setValue(Activity activity, @StringRes int stringID, String value) {
-        setValue(activity, activity.getString(stringID), value);
+    public static boolean setValue(Activity activity, @StringRes int stringID, String value) {
+       return setValue(activity, activity.getString(stringID), value);
     }
 
-    public static void setValue(Activity activity, String key, String value) {
+    public static boolean setValue(Activity activity, String key, String newValue) {
+
+        String oldValue = getValue(activity, key);
+        if (oldValue.equals(newValue))
+            return false;
+
         SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(key, value);
+        editor.putString(key, newValue);
         editor.apply();
+        return true;
     }
 
     public static String getValue(Activity activity,String key) {
