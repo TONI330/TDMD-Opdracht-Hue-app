@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private HueApiManager apiManager;
     private LampsViewModel mViewModel;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(LampsViewModel.class);
         mViewModel.getSelected().observe(this, this::listItemPressed);
 
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
+        this.fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -62,14 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            goToDetail(manager);
+            goToDetail(fragmentManager);
         } else {
-            updateDetail(manager);
+            updateDetail(fragmentManager);
         }
     }
 
     private void goToDetail(FragmentManager manager) {
-        FragmentTransaction transaction = manager.beginTransaction();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.portraitFragment, DetailFragment.class, null,"portraitFragment");
         transaction.addToBackStack("portraitDetail");
         transaction.commit();
@@ -77,10 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void updateDetail(FragmentManager manager) {
-        DetailFragment fragmentById = (DetailFragment) manager.findFragmentById(R.id.detailFragment);
-        if (fragmentById == null) {
-            return;
-        }
+        DetailFragment fragmentById = (DetailFragment) fragmentManager.findFragmentById(R.id.detailFragment);
+        if (fragmentById == null) return;
         fragmentById.update();
     }
 
@@ -116,5 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void toggleSelected(View view) {
         this.mViewModel.getSelectedLamp().toggle();
+        updateDetail(getSupportFragmentManager());
     }
 }

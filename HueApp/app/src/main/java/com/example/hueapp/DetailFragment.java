@@ -52,8 +52,6 @@ public class DetailFragment extends Fragment {
                 float[] hsv = new float[3];
                 Color.colorToHSV(color, hsv);
 
-
-
                 mViewModel.getSelectedLamp().setColor(hsv);
 //                if (!done[0]) {
 //                    mViewModel.getSelectedLamp().setColor(hsv);
@@ -70,6 +68,7 @@ public class DetailFragment extends Fragment {
         Log.d("color", color+"");
         colorPicker.setColor(color);
         imageView.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        update();
     }
 
     @Override
@@ -82,10 +81,17 @@ public class DetailFragment extends Fragment {
     }
 
     public void update() {
-        TextView textView = requireView().findViewById(R.id.basicBitch);
+        TextView lampName = requireView().findViewById(R.id.lampName);
+        TextView detailInfo = requireView().findViewById(R.id.detailInfo);
+
         Lamp lamp = mViewModel.getSelected().getValue();
-        if (lamp != null) {
-            textView.setText(lamp.getName());
-        }
+
+        String detailInfoText = "Id: " + (lamp != null ? lamp.getID() : null);
+        detailInfoText += "\nState: " + (lamp != null && lamp.getState());
+        detailInfoText += "\nColor: " + (lamp != null ? Arrays.toString(lamp.getColor()) : null);
+
+        if (lamp != null && lampName != null) lampName.setText(lamp.getName());
+        if (lamp != null && detailInfo != null) detailInfo.setText(detailInfoText);
+
     }
 }
