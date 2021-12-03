@@ -32,9 +32,6 @@ interface LightController {
 public class HueApiManager implements LightController {
     private static final String LOGTAG = HueApiManager.class.getName();
 
-    //private static final String USERNAME = "c309879139eb4ff896fe0ffb26896fb";
-
-
     private AppCompatActivity appContext;
     private RequestQueue queue;
 
@@ -43,15 +40,12 @@ public class HueApiManager implements LightController {
     public HueApiManager(AppCompatActivity appContext) {
         this.appContext = appContext;
         // Create the RequestQueue for Volley requests
-
-
         this.queue = Volley.newRequestQueue(this.appContext);
         mViewModel = new ViewModelProvider(appContext).get(LampsViewModel.class);
     }
 
     public HueApiManager() {
     }
-
 
     private String getIpAndPortCombo() {
         String IP_AND_PORT = "192.168.2.38:" + 8000;
@@ -73,16 +67,13 @@ public class HueApiManager implements LightController {
         return IP_AND_PORT;
     }
 
-
     private String getApiEndPoint() {
         return "http://" + getIpAndPortCombo() + "/api/" + getUsername();
     }
 
-
     public void getIpAddress() {
         this.queue.add(getIpAddressRequest());
     }
-
 
     public void getLights() {
         this.queue.add(getLightsRequest());

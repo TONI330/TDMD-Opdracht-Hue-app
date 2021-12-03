@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.madrapps.pikolo.ColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -54,7 +55,6 @@ public class DetailFragment extends Fragment {
                 hsv[1] = hsv[1] * 254f;
                 hsv[2] = hsv[2] * 254f;
 
-
                 mViewModel.getSelectedLamp().setColor(hsv);
 //                if (!done[0]) {
 //                    mViewModel.getSelectedLamp().setColor(hsv);
@@ -64,7 +64,16 @@ public class DetailFragment extends Fragment {
                 Log.i(LOGTAG, "onColorSelected: " + color);
             }
         });
+        float[] selectedLampColor = mViewModel.getSelectedLamp().getColor();
+        Log.d("color", Arrays.toString(selectedLampColor));
+        selectedLampColor[0] = selectedLampColor[0] * 365f / 65535f;
+        selectedLampColor[1] = selectedLampColor[1] / 254f;
+        selectedLampColor[2] = selectedLampColor[2] / 254f;
 
+
+        Color color = Color.valueOf(selectedLampColor[0], selectedLampColor[1], selectedLampColor[2], 255f);
+        Log.d("color",  color.toString() + "");
+        colorPicker.setColor(color.toArgb());
     }
 
     @Override

@@ -51,7 +51,7 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mLampItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getName());
-        if(holder.mLampItem.getColor() != null) lampImage.setColorFilter(Color.HSVToColor(holder.mLampItem.getColor()), PorterDuff.Mode.ADD);
+        //if(holder.mLampItem.getColor() != null) lampImage.setColorFilter(Color.HSVToColor(holder.mLampItem.getColor()), PorterDuff.Mode.ADD);
         //holder.mContentView.setText(mValues.get(position).content);
     }
 
@@ -71,7 +71,6 @@ public class LampRecyclerViewAdapter extends RecyclerView.Adapter<LampRecyclerVi
             mIdView = itemView.findViewById(R.id.item_number);
             itemView.setOnClickListener(this);
         }
-
 
         @NonNull
         @Override
