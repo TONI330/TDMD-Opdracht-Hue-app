@@ -2,6 +2,8 @@ package com.example.hueapp;
 
 import androidx.annotation.NonNull;
 
+import com.example.hueapp.util.ColorConverter;
+
 import java.util.Arrays;
 
 public class HueLamp implements Lamp{
@@ -12,11 +14,12 @@ public class HueLamp implements Lamp{
 
     private LightController lightController;
 
-    public HueLamp(String name, String id, boolean state, LightController lightController) {
+    public HueLamp(String name, String id, boolean state,float[] hsv, LightController lightController) {
         this.state = state;
         this.id = id;
         this.name = name;
         this.lightController = lightController;
+        this.hsv = hsv;
     }
 
     @Override
@@ -54,13 +57,14 @@ public class HueLamp implements Lamp{
         setState(!state);
     }
 
-    private final float[] hsv = new float[3];
+    private final float[] hsv;
 
     @Override
     public void setColor(float[] hsv) {
         if (this.hsv[0] != hsv[0]) {
             System.arraycopy(hsv, 0, this.hsv, 0, hsv.length);
-            lightController.setLightColor(this,this.hsv);
+            float[] floats = ColorConverter.hsvToHueColor(hsv);
+            lightController.setLightColor(this,floats);
         }
     }
 

@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hueapp.util.ColorConverter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -217,7 +218,13 @@ public class HueApiManager implements LightController {
                 String name = light.getString("name");
                 JSONObject state = light.getJSONObject("state");
                 boolean on = state.getBoolean("on");
-                mViewModel.addItem(new HueLamp(name, i + "", on, this));
+
+                int BInt = state.getInt("bri");
+                int HInt = state.getInt("hue");
+                int SInt = state.getInt("sat");
+
+                float[] floats = ColorConverter.hsvFromHueColor(BInt, HInt, SInt);
+                mViewModel.addItem(new HueLamp(name, i + "", on, floats, this));
                 Log.d("light", name);
             } catch (JSONException e) {
                 Log.e(LOGTAG, e.getLocalizedMessage());

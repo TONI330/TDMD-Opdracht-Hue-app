@@ -21,9 +21,19 @@ public class ExampleUnitTest {
     public void addLampTest()
     {
         Bridge bridge = new Bridge();
-        Bridge.TestLamp testLamp = new Bridge.TestLamp(1234567 + "", "henk de lamp");
-        bridge.getLamps().add(testLamp);
-        assertTrue(bridge.getLamps().contains(testLamp));
+        HueLamp hueLamp = new HueLamp("test", "1", true,new float[3], new LightController() {
+            @Override
+            public void setLight(Lamp lamp, boolean state) {
+
+            }
+
+            @Override
+            public void setLightColor(Lamp lamp, float[] hsv) {
+
+            }
+        });
+        bridge.getLamps().add(hueLamp);
+        assertTrue(bridge.getLamps().contains(hueLamp));
 
 
     }

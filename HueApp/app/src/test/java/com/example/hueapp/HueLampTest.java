@@ -18,7 +18,7 @@ final static String id = "1";
     @Before
     public void onTestStart()
     {
-        hueLamp = new HueLamp(name, id, false, new LightController() {
+        hueLamp = new HueLamp(name, id, false,new float[3], new LightController() {
             @Override
             public void setLight(Lamp lamp, boolean state) {
 
